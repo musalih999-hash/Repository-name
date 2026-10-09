@@ -1,0 +1,6 @@
+{
+  "servers": [
+    {"id":"de-fra-01","country":"Germany","city":"Frankfurt","flag":"🇩🇪","endpoint_host":"fra.example-vpn.com","endpoint_port":51820,"probe_protocol":"udp","active_connections":31,"max_connections":100,"config_asset":"assets/wireguard/de-fra-01.conf"},
+    {"id":"nl-ams-01","country":"Netherlands","city":"Amsterdam","flag":"🇳🇱","endpoint_host":"ams.example-vpn.com","endpoint_port":51820,"probe_protocol":"udp","active_connections":42,"max_connections":100,"config_asset":"assets/wireguard/nl-ams-01.conf"}
+  ]
+}

@@ -1,0 +1,17 @@
+.dart_tool/
+.packages
+.pub/
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+.idea/
+.vscode/
+*.iml
+*.keystore
+*.jks
+.env
+# Never commit real VPN keys or production configs.
+assets/wireguard/*
+!assets/wireguard/*.example.conf
+# Local APKs
+*.apk

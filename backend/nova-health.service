@@ -1,0 +1,8 @@
+[Unit]
+Description=NOVA VPN WireGuard health agent
+After=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/nova-vpn/backend
+ExecStart=/opt/nova-vpn/backend/.venv/bin/python /opt/nova-vpn/backend/health_agent.py
