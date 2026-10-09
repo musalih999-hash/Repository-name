@@ -49,7 +49,7 @@ jobs:
         run: flutter test
 
       - name: Build Debug APK
-        run: flutter build apk --debug --no-pub
+        run: flutter build apk --release --no-pub
 
       - name: Build Release APK
         run: flutter build apk --release --no-pub
