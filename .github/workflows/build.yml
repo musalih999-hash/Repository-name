@@ -2,98 +2,35 @@ name: Build NOVA VPN APK
 
 on:
   push:
-    branches: ["**"]
-  pull_request:
-    branches: ["**"]
-  workflow_dispatch:
-
-permissions:
-  contents: read
-
-env:
-  FLUTTER_VERSION: "3.35.4"
+    branches: [ main ]
 
 jobs:
-  build-android:
-    name: Build Android APKs
+  build:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
+      - uses: actions/checkout@v4
+      
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
-          distribution: temurin
-          java-version: "21"
-          cache: gradle
+          distribution: 'zulu'
+          java-version: '17'
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: ${{ env.FLUTTER_VERSION }}
-          channel: stable
+          flutter-version: '3.19.x'
+          channel: 'stable'
           cache: true
 
-      - name: Flutter doctor
-        run: flutter doctor -v
-
-      - name: Install dependencies
+      - name: Install Dependencies
         run: flutter pub get
 
-      - name: Analyze Dart
-        run: flutter analyze || true --no-fatal-infos
-
-      - name: Run tests
-        run: flutter test
-
-      - name: Build Debug APK
-        run: flutter build apk --release --no-pub
-
       - name: Build Release APK
-        run: flutter build apk --release --no-pub
+        run: flutter build apk --release
 
-      - name: Prepare artifacts
-        run: |
-          mkdir -p dist
-          cp build/app/outputs/flutter-apk/app-debug.apk dist/nova-vpn-debug.apk
-          cp build/app/outputs/flutter-apk/app-release.apk dist/nova-vpn-release-unsigned.apk
-          sha256sum dist/*.apk > dist/SHA256SUMS.txt
-
-      - name: Upload Debug APK
+      - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: nova-vpn-debug-apk
-          path: dist/nova-vpn-debug.apk
-          if-no-files-found: error
-          retention-days: 14
-
-      - name: Upload Release APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: nova-vpn-release-apk
-          path: dist/nova-vpn-release-unsigned.apk
-          if-no-files-found: error
-          retention-days: 14
-
-      - name: Upload checksums
-        uses: actions/upload-artifact@v4
-        with:
-          name: nova-vpn-checksums
-          path: dist/SHA256SUMS.txt
-          if-no-files-found: error
-          retention-days: 14
-
-      - name: Add download instructions to summary
-        run: |
-          {
-            echo "## NOVA VPN APK artifacts"
-            echo ""
-            echo "The APKs are available in the Artifacts section of this workflow run:"
-            echo "- **nova-vpn-debug-apk** — debug build for device testing"
-            echo "- **nova-vpn-release-apk** — release build using the repository's current signing configuration"
-            echo "- **nova-vpn-checksums** — SHA-256 checksums"
-            echo ""
-            echo "> GitHub artifact downloads require repository access and expire after the configured retention period."
-          } >> "$GITHUB_STEP_SUMMARY"
+          name: app-release
+          path: build/app/outputs/flutter-apk/app-release.apk
